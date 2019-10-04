@@ -1,0 +1,105 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Caveat&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  height: 100vh;
+  width: 100%;
+}
+
+.menu {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+}
+h1 {
+  color: #ff4b2b;
+  font-family: "Caveat", cursive;
+  font-size: 32px;
+}
+
+a {
+  text-decoration: none;
+}
+
+h4 {
+  position: relative;
+  top: 5px;
+  right: 15px;
+  color: #ff4b2b;
+  border: 2px solid #ff4b2b;
+  padding: 5px;
+}
+
+.terms-policy {
+  text-align: center;
+  height: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.terms {
+  background: #ff4b2b;
+  color: white;
+  border-radius: 5px;
+}
+
+.about:hover {
+  background: #ff4b2b;
+  color: white;
+  border-radius: 5px;
+}
+
+.privacy:hover {
+  background: #ff4b2b;
+  color: white;
+  border-radius: 5px;
+}
+
+.cookie:hover {
+  background: #ff4b2b;
+  color: white;
+  border-radius: 5px;
+}
+
+.terms-policy a {
+  text-decoration: none;
+  padding: 9px;
+  font-size: 18px;
+}
+
+.terms-container {
+  text-align: justify;
+  margin: auto;
+  height: 20vh;
+  font-size: 13.9px;
+  width: 70%;
+  padding-top: 30px;
+}
+
+.services-list {
+  padding: 20px;
+  width: 90%;
+  margin: auto;
+}
+
+.copyright {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px;
+}
+
+p {
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+}
