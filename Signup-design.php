@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +9,12 @@
     <title>Welcome to Friesta</title>
     <link rel="stylesheet" href="pages/styles/login-style.css">
     <script src="https://kit.fontawesome.com/1032187501.js" crossorigin="anonymous"></script>
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+  <script src="scripts/validator.js"></script>
+
 </head>
 <body>
     <header>
@@ -16,6 +24,7 @@
         <!-- Sign Up form code goes here -->
         <div class="form-container sign-up-container">
             <form action="create-account.php" method="post">
+                  <p id="error_message" style="color:red;"></p>
                 <h1>Create Account</h1>
                 <div class="social-container">
                     <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -23,10 +32,10 @@
                     <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                 </div>
                 <span>or use your email for registration</span>
-                <input type="text" placeholder="Name" name="username"/>
-                <input type="email" placeholder="Email" name="email"/>
-                <input type="password" placeholder="Password" name="password"/>
-                <button name="create-account">Sign Up</button>
+                <input type="text" id="username" placeholder="Name" name="username"/>
+                <input type="email" id="email" placeholder="Email" name="email"/>
+                <input type="password" id="password" placeholder="Password" name="password"/>
+                <button type="submit"name="create-account">Sign Up</button>
             </form>
         </div>
             <!-- Sign In form code goes here -->
