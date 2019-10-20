@@ -1,0 +1,160 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Caveat&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  background-color: #f6f5f7;
+  height: 100vh;
+}
+header {
+  height: 50px;
+  width: 100%;
+}
+
+.container{
+    height:320px;
+    width:50%;
+    margin:0 auto;
+    display: flex;
+}
+
+.profile-image{
+    height:100%;
+    width:22%;
+    text-align: center;
+}
+
+.data-container{
+    height:100%;
+    width:100%;
+    
+}
+
+.profile-detail{
+    height: 60%;
+    width:100%;
+    display: flex;
+}
+
+.profile-bio{
+    height:40%;
+    width:100%;
+
+}
+#username{
+    padding:0;
+    padding-left: 10px;
+    color:#0984e3;
+    font-weight: bold;
+}
+#bio{
+    padding-top: 0;
+}
+
+img{
+    height:25%;
+    width:70%;
+    position: relative;
+    top:30px;
+    border-radius: 50%;
+}
+
+.edit_profile{
+    height:25px;
+    width:90px;
+    padding:2px;
+    background: white;
+    color:black;
+    border:1px solid black;
+    border-radius: 3px;
+    cursor: pointer;
+
+}
+
+.edit_profile:active {
+    transform: scale(0.95);
+}
+  
+.edit_profile:focus {
+    outline: none;
+}
+  
+.edit_profile.ghost {
+    background: transparent;
+    border-color: #fff;
+}
+
+.location{
+    height:15px;
+    width:15px;
+    position: relative;
+    top:-0px;
+}
+
+.name{
+    padding-left:15px;
+    padding-top: 30px;
+}
+
+p{
+    font-size: 13px;
+    padding:10px;
+}
+
+span{
+    font-size: 15px;
+}
+
+.follow-container{
+    height:100%;
+    width:50%;
+    position: relative;
+    right: -12%;
+    text-align: center;
+}
+
+.follow{
+    background:#FF416C;
+    border:2px solid #FF416C;
+    margin-top: 30px;
+    position: relative;
+    left: -10px;
+}
+
+.message{
+    background:#FF4B2B;
+    border:2px solid #FF4B2B;
+    position: relative;
+    right: -10px;
+}
+
+button {
+    border-radius: 25px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 10px 20px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: transform 80ms ease-in;
+  }
+  
+  button:active {
+    transform: scale(0.95);
+  }
+  
+  button:focus {
+    outline: none;
+  }
+  
+  button.ghost {
+    background: transparent;
+    border-color: #fff;
+  }
+
+  

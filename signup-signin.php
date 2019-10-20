@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,11 @@
     <title>Welcome to Friesta</title>
     <link rel="stylesheet" href="pages/styles/login-style.css">
     <script src="https://kit.fontawesome.com/1032187501.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script src="scripts/validator.js"></script>
+
 </head>
+
 <body>
     <header>
         <h2>Friesta</h2>
@@ -15,7 +20,8 @@
     <div class="container" id="container">
         <!-- Sign Up form code goes here -->
         <div class="form-container sign-up-container">
-            <form action="create-account.php" method="post">
+            <form id="signup" action="create-account.php" method="post">
+                <p id="error_message" style="color:red;"></p>
                 <h1>Create Account</h1>
                 <div class="social-container">
                     <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -23,15 +29,16 @@
                     <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                 </div>
                 <span>or use your email for registration</span>
-                <input type="text" placeholder="Name" name="username"/>
-                <input type="email" placeholder="Email" name="email"/>
-                <input type="password" placeholder="Password" name="password"/>
-                <button name="create-account">Sign Up</button>
+                <input type="text" id="username" placeholder="Name" name="username" />
+                <input type="email" id="email" placeholder="Email" name="email" />
+                <input type="password" id="password" placeholder="Password" name="password" />
+                <button type="submit" name="create-account">Sign Up</button>
             </form>
         </div>
-            <!-- Sign In form code goes here -->
-            <div class="form-container sign-in-container">
-                <form action="#">
+        <!-- Sign In form code goes here -->
+        <div class="form-container sign-in-container">
+            <form id="signin" action="login.php" method="post">
+                <p id="login_error" style="color:red;"></p>
                 <h1>Sign in</h1>
                 <div class="social-container">
                     <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -39,10 +46,10 @@
                     <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                 </div>
                 <span>or use your account</span>
-                <input type="email" placeholder="Email" />
-                <input type="password" placeholder="Password" />
+                <input type="text" id="login_username" name="username" placeholder="Username" />
+                <input type="password" id="login_password" name="password" placeholder="Password" />
                 <a href="#">Forgot your password?</a>
-                <button>Sign In</button>
+                <button type="submit" id="login" name="login-account">Sign In</button>
             </form>
         </div>
         <div class="overlay-container">
@@ -71,8 +78,8 @@
                 easy to use because of it's wonderful user interface.
             </p>
         </div>
-        <br/>
-        <br/>
+        <br />
+        <br />
         <div class="footer">
             <div class="description">
                 <a href="pages/about.html" class="desc">About Us</a>
@@ -80,7 +87,7 @@
                 <a href="pages/privacy.html" class="desc">Privacy</a>
                 <a href="pages/cookie.html" class="desc">Cookie</a>
             </div>
-            <br/>
+            <br />
             <div class="developer">
                 <div class="developby">
                     <span><b>Developed By ~ Ashish Jaiswar</b></span>
@@ -94,4 +101,5 @@
     </footer>
     <script src="scripts/login-animation.js"></script>
 </body>
+
 </html>
