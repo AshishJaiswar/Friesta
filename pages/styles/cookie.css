@@ -31,10 +31,9 @@ h4 {
   position: relative;
   top: 5px;
   right: 15px;
-  color: white;
-  background:#ff4b2b;
-  padding: 10px;
-  border-radius: 5px;
+  color: #ff4b2b;
+  border: 2px solid #ff4b2b;
+  padding: 5px;
 }
 
 .Cookie {
