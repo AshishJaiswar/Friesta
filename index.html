@@ -7,8 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Friesta | Homepage</title>
     <link rel="stylesheet" href="./pages/styles/home.css">
+<<<<<<< HEAD
+    <script src="./scripts/jquery.min.js"></script>
+=======
     <script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 
+>>>>>>> 14226c79fce92bcb97faa12b3af6bbe784836f0b
 
 </head>
 
@@ -56,6 +60,9 @@
 
             </div>
             <div class="timeline">
+<<<<<<< HEAD
+
+=======
                 <div class="user-posts">
                     <div class="username">
                         <div class="profile-logo">
@@ -85,6 +92,7 @@
                         <p class="more-btn">View all 5 comments</p>
                     </div>
                 </div>
+>>>>>>> 14226c79fce92bcb97faa12b3af6bbe784836f0b
             </div>
         </div>
         <div class="people">
@@ -113,5 +121,56 @@
     });
 </script>
 <script src="./scripts/like-animation.js"></script>
+<<<<<<< HEAD
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: 'index.php',
+            data: '',
+            success: function (data) {
+                var posts = JSON.parse(data)
+                $.each(posts, function (index) {
+
+                    timeline = '<div class="user-posts"><div class="username">\
+                        <div class="profile-logo">\
+                            <img src="#">\
+                        </div>\
+                        <h3 class="user_name">'+ posts[index].PostedBy + '</h3>\
+                    </div>\
+                    <div class="time">\
+                        <p class="post-time">'+ posts[index].PostDate + '</p>\
+                    </div>\
+                    <div class="posted-area">\
+                        <p> '+ posts[index].PostBody + '\
+                        </p>\
+                    </div>\
+                    <div class="like-comment">\
+                        <div class="heart"></div>\
+                        <span class="like">'+ posts[index].Likes + '</span>\
+                        <div class="comment">\
+                            <img class="comment-icon" src="./pages/images/flash.svg" alt="comments">\
+                            <span class="comment-btn">comments</span>\
+                        </div>\
+                    </div>\
+                    <div class="more-comments">\
+                        <p><b>_ashish_jaiswar_ ~</b> <span>Nice Post</span></p>\
+                        <p class="more-btn">View all 5 comments</p>\
+                    </div>\
+                </div>'
+                    $('.timeline').html(
+                        $('.timeline').html() + timeline
+                    )
+                })
+            },
+            error: function (data) {
+                console.log(data)
+            }
+        })
+    })
+</script>
+
+=======
+>>>>>>> 14226c79fce92bcb97faa12b3af6bbe784836f0b
 
 </html>
