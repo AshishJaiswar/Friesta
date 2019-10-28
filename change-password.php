@@ -2,6 +2,7 @@
 include('./classes/DB.php');
 include('./classes/Login.php');
 
+
 $result = '';
 $tokenIsValid = False;
 
@@ -84,7 +85,7 @@ if (Login::isLoggedIn()) {
             <div class='current'>
                 <?php if (!$tokenIsValid) {
                     echo "<h5>Current Password</h5>
-                <input type='password' placeholder='Current Password....' name='oldpassword' id='currentpass'>";
+                <input type='password' class='input' placeholder='Current Password....' name='oldpassword' id='currentpass'>";
                 }
                 ?>
 
@@ -92,7 +93,7 @@ if (Login::isLoggedIn()) {
 
             <div class="new">
                 <h5 id="new_id">New Password</h5>
-                <input id="new_input" type="password" placeholder="New Password...." name="newpassword" id="newpass">
+                <input id="new_input" class='input' type="password" placeholder="New Password...." name="newpassword" id="newpass">
             </div>
             <div class="repeat">
                 <h5>Repeat Password</h5>

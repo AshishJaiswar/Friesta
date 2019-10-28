@@ -3,13 +3,14 @@ include('classes/DB.php');
 include('classes/Login.php');
 include('./classes/Post.php');
 include('./classes/Comment.php');
+include('./classes/Search.php');
 $showTimeline = False;
 if (Login::isLoggedIn()) {
 
         $userid = Login::isLoggedIn();
         $showTimeline = True;
 } else {
-        echo 'Not logged in';
+        die('Not logged in');
 }
 
 if (isset($_GET['postid'])) {
@@ -20,6 +21,18 @@ if (isset($_POST['comment'])) {
         Comment::createComment($_POST['commentbody'], $_GET['postid'], $userid);
 }
 
+if (isset($_POST['search'])) {
+        Search::searchPosts();
+}
+?>
+
+<form action="index.php" method="post">
+        <input type="text" placeholder="Search" name="searchbox">
+        <input type="submit" value="Search" name="search">
+</form>
+
+
+<?php
 $followingposts = DB::query('SELECT posts.id, posts.body, posts.likes, users.`username` FROM users, posts, followers
 WHERE posts.user_id = followers.user_id
 AND users.id = posts.user_id

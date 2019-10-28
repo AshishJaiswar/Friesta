@@ -1,7 +1,7 @@
 <?php
 
 include('classes/DB.php');
-
+include('classes/Mail.php');
 
 $username = $_POST['username'];
 $password = $_POST['password'];
@@ -37,6 +37,7 @@ if (!DB::query('SELECT username FROM users WHERE username=:username', array(':us
                               if (!DB::query('SELECT email FROM users WHERE email=:email', array(':email' => $email))) {
 
                                     DB::query('INSERT INTO users VALUES(\'\',:username,:password,:email,\'0\', \'\')', array(':username' => $username, ':password' => password_hash($password, PASSWORD_BCRYPT), ':email' => $email));
+                                    Mail::sendMail('Welcome to Friesta', 'Your Account has been created sucessfully.', $email);
                                     echo "Sucess";
                               } else {
                                     echo 'User Already Registered.<br>';

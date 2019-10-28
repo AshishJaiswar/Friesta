@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Friesta | Homepage</title>
+    <link rel="stylesheet" href="./pages/styles/home.css">
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">
+            <a href="#">
+                <h1 id="friesta">Friesta</h1>
+            </a>
+        </div>
+        <div class="search">
+            <input type="text" placeholder="Search" class="search-input">
+            <button type="submit">Search</button>
+        </div>
+        <div class="nav-links">
+            <ul class="links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Chats</a></li>
+                <li><a href="#">Notifications</a></li>
+                <li><a href="#">My Profile</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <div class="detail">
+
+        </div>
+        <div class="posts">
+            <div class="create-post">
+                <div class="post-area">
+                    <textarea class="textarea" type="text" placeholder="What are you thinking?" rows="5"
+                        cols="80"></textarea>
+                    <div class="post-button">
+                        <button type="submit" id="post">Post</button>
+
+                        <div class="select">
+                            <input type="file" hidden="hidden" id="real-file">
+                            <input type="text" class="browse" placeholder="Upload Image" id="custom-text">
+                            <button type="button" class="choose" id="custom-button">Choose image</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="timeline">
+                <div class="user-posts">
+                    <div class="username">
+                        <div class="profile-logo">
+                            <img src="#">
+                        </div>
+                        <h3 class="user_name">_ashish_jaiswar_</h3>
+                    </div>
+                    <div class="time">
+                        <p class="post-time">10 min ago</p>
+                    </div>
+                    <div class="posted-area">
+                        <p>Hey my name is Ashish im new to friesta
+                            and i feel tha this is a amazing website.
+                            butv hjgj f ghfhf fghfhgf
+                        </p>
+                    </div>
+                    <div class="like-comment">
+                        <div class="heart"></div>
+                        <span class="like">5</span>
+                        <div class="comment">
+                            <img class="comment-icon" src="./pages/images/flash.svg" alt="comments">
+                            <span class="comment-btn">comments</span>
+                        </div>
+                    </div>
+                    <div class="more-comments">
+                        <p><b>_ashish_jaiswar_ ~</b> <span>Nice Post</span></p>
+                        <p class="more-btn">View all 5 comments</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="people">
+
+        </div>
+</body>
+</div>
+<script type="text/javascript">
+    const realFileBtn = document.getElementById("real-file");
+    const customBtn = document.getElementById("custom-button");
+    const customTxt = document.getElementById("custom-text");
+
+    customBtn.addEventListener("click", function () {
+        realFileBtn.click();
+    });
+
+
+    realFileBtn.addEventListener("change", function () {
+        if (realFileBtn.value) {
+            customTxt.value = realFileBtn.value.match(
+                /[\/\\]([\w\d\s\.\-\(\)]+)$/
+            )[1];
+        } else {
+            customTxt.value = "No file chosen, yet.";
+        }
+    });
+</script>
+<script src="./scripts/like-animation.js"></script>
+
+</html>
