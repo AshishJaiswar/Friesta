@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Friesta | Homepage</title>
+ 
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<style>
+@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Caveat&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  width: 100%;
+}
+
+.header{
+    display: flex;
+    height:50px;
+    justify-content: space-between;
+    padding-top: 10px;
+}
+
+.logo{
+    width:140px;
+    text-align: center;
+}
+
+#friesta{
+    color: #ff4b2b;
+  font-family: 'Caveat', cursive;
+  font-weight:bold;
+  font-size: 42px;
+  margin:0 auto;
+}
+
+a{
+    text-decoration: none;
+    color:#ff416c;
+}
+
+a:hover{
+  color: #2c3e50;
+}
+
+a:link{
+  color:#ff416c;
+}
+.search{
+    width:80vh;
+    text-align: left;
+   
+}
+
+.search-input{
+    height:32px;
+    width:80%;
+    border: 1px solid #95a5a6;
+    border-radius: 2px;
+    padding-left:10px;
+    margin-top:10px;
+
+}
+
+button {
+    border-radius: 2px;
+    border: 1px solid #ff416c;
+    background: #ff416c;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: "Nunito+Sans", sans-serif;
+    padding: 9px 15px;
+    letter-spacing: 1px;
+    position: relative;
+    top:-1px;
+    margin-left: -6px;
+    transition: transform 80ms ease-in;
+  }
+  
+  button:active {
+    transform: scale(0.95);
+  }
+  
+  button:focus {
+    outline: none;
+  }
+  
+  button.ghost {
+    background: transparent;
+    border-color: #fff;
+  }
+.nav-links{
+    width:50%;
+    
+}
+
+.links{
+  text-decoration: none;
+  list-style-type: none;
+  display: flex;
+  justify-content: space-around;
+}
+
+li{
+  padding-top:20px;
+}
+
+.container{
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.detail{
+  height: 20vh;
+  width:20%;
+  background-color: lightblue;
+  margin-top:30px;
+}
+
+.posts{
+  height: 100%;
+  width:50%;
+  margin-top:30px;
+  
+}
+
+.create-post{
+  height: 25vh;
+  border-radius: 2px;
+}
+.post-area{
+  padding: 10px;
+  width:90%;
+  height:20vh;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.textarea{
+padding: 5px;
+}
+
+.people{
+  height: 20vh;
+  width:20%;
+
+  margin-top:30px;
+}
+
+#post{
+  background: #ff416c;
+  position: relative;
+  top:5px;
+  left: 20px;
+}
+
+.post-button{
+  display: flex;
+  height: 35px;
+}
+
+.select{
+position: relative;
+left:30px;
+top:4px;
+height: 40px;
+width:450px;
+padding-top: 2px;
+}
+
+.browse{
+  height:28px;
+  width: 60%;
+  border: 1px solid #95a5a6;
+  border-radius: 2px;
+  padding: 2px 2px;
+  border-radius: 2px;
+  color:#2c3e50;
+
+}
+
+
+.choose{
+  background: #ff416c;
+}
+
+.timeline{
+  margin-top:30px;
+}
+
+.user-posts{
+  margin: 10px 0px 10px 0px;
+  border: 1px solid #979a9a;
+}
+
+.username{
+border-bottom: 1px solid #979a9a;
+height:40px;
+display: flex;
+justify-content: flex-start;
+}
+
+.profile-logo{
+  height:30px;
+  width: 30px;
+  border-radius: 50%;
+  margin: 5px;
+  background: lightgray;
+}
+
+.user_name{
+  margin: 5px;
+  padding-top: 7px;
+  font-size: 15px;
+  color: #485460;
+}
+
+.time{
+  height: 20px;
+  font-size: 9px;
+  margin:0px 10px 0px 10px;
+}
+
+.post-time{
+  padding: 5px;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+.posted-area{
+  margin:10px 20px 0px 20px;
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+/* Like And Comment*/
+
+.heart {
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  background-image:url( 'https://abs.twimg.com/a/1446542199/img/t1/web_heart_animation.png');
+  background-position:right;
+  background-repeat:no-repeat;
+  background-size:2900%;
+  margin:0px -10px 0px 0px; 
+
+}
+
+.heart:hover {
+  background-position:right;
+}
+
+.is_animating{
+    animation: heart-burst .8s steps(28) 1;
+    background-position:right;
+}
+
+
+
+@keyframes heart-burst {
+  from {background-position:left;}
+  to { background-position:right;}
+}
+
+.like-comment{
+  display: flex;
+}
+
+.like{
+  
+  text-align: right;
+}
+
+.like-number{
+  padding-top: 15px;
+
+}
+
+.comment{
+
+height: 40px;
+margin-left: 50px;
+position: relative;
+top:7px;
+font-size: 14px;
+color: rgb(216, 173, 1);
+cursor: pointer;
+}
+
+#comment{
+  height: 30px; background: none;border: none;color: #2c3e50;cursor: pointer;font-size: 13px;
+}
+
+#input-comment{
+  height:32px;
+        width:70%;
+        border: 1px solid #95a5a6;
+        border-radius: 2px;
+        padding-left:10px;
+        margin-top:10px;
+}
+
+.comment-icon {
+  height: 15px;
+  width: 20px;
+  position: relative;
+  top: 2px;
+}
+
+
+
+.display{
+  padding:5px ;
+
+}
+
+.posted-comment{
+
+  font-size: 13px;
+ margin: 10px;
+}
+
+
+
+/*modal*/
+element.style {
+}
+
+.fade:not(.show) {
+  opacity: 0;
+}
+
+[tabindex="-1"]:focus {
+  outline: 0!important;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  display: none;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  outline: 0;
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .fade {
+    transition: none;
+  }
+}
+
+.fade {
+  transition: opacity .15s linear;
+}
+
+
+
+.modal-dialog{
+    background: rgb(240, 240, 240);
+    height:400px;
+    width: 60%;
+    margin: 100px auto;
+}
+
+.modal-title{
+    margin:5px 5px 10px 0px;
+}
+</style>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">
+            <a href="#">
+                <h1 id="friesta">Friesta</h1>
+            </a>
+        </div>
+        <div class="search">
+            <input type="text" placeholder="Search" class="search-input">
+            <button type="submit">Search</button>
+        </div>
+        <div class="nav-links">
+            <ul class="links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Chats</a></li>
+                <li><a href="#">Notifications</a></li>
+                <li><a href="#">My Profile</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <div class="detail">
+
+        </div>
+        <div class="posts">
+            <div class="create-post">
+                <div class="post-area">
+                    <textarea class="textarea" type="text" placeholder="What are you thinking?" rows="5"
+                        cols="80"></textarea>
+                    <div class="post-button">
+                        <button type="submit" id="post">Post</button>
+
+                        <div class="select">
+                            <input type="file" hidden="hidden" id="real-file">
+                            <input type="text" class="browse" placeholder="Upload Image" id="custom-text">
+                            <button type="button" class="choose" id="custom-button">Choose image</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="timeline">
+                <div class="user-posts">
+                    <div class="username">
+                        <div class="profile-logo">
+                            <img src="#">
+                        </div>
+                        <h3 class="user_name">_ashish_jaiswar_</h3>
+                    </div>
+                    <div class="time">
+                        <p class="post-time">10 min ago</p>
+                    </div>
+                    <div class="posted-area">
+                        <p>Hey my name is Ashish im new to friesta
+                            and i feel tha this is a amazing website.
+                            butv hjgj f ghfhf fghfhgf
+                        </p>
+                    </div>
+                    <div class="like-comment">
+                        <div class="like">
+                            <div class="heart">
+                                <p class="like-number">5</p>
+                            </div>
+                        </div>
+                        <div class="comment" id="comm">
+                          <img class="comment-icon" src="./pages/images/flash.svg">
+                            <span class="comment-btn">comments</span>
+                        </div>
+                        
+                    </div>
+                    <div class="display" style="display: none;">
+                      <input id="input-comment" type="text" placeholder="Add Comment"> <span><button>Comment</button></span>
+                      <div class="posted-comment">
+                        <p ><b>_ashish_jaiswar_ ~</b> <span>Nice Post</span></p>
+                      </div>
+                      
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" role="dialog" tabindex="-1">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Comments</h4><button type="button" class="close"
+                            data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body" style="max-height: 400px; overflow-y: auto">
+                        <p>The content of your modal.</p>
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-light" type="button"
+                            data-dismiss="modal">Close</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="people">
+
+        </div>
+</body>
+</div>
+<script type="text/javascript">
+    const realFileBtn = document.getElementById("real-file");
+    const customBtn = document.getElementById("custom-button");
+    const customTxt = document.getElementById("custom-text");
+
+    customBtn.addEventListener("click", function () {
+        realFileBtn.click();
+    });
+
+
+    realFileBtn.addEventListener("change", function () {
+        if (realFileBtn.value) {
+            customTxt.value = realFileBtn.value.match(
+                /[\/\\]([\w\d\s\.\-\(\)]+)$/
+            )[1];
+        } else {
+            customTxt.value = "No file chosen, yet.";
+        }
+    });
+
+</script>
+
+
+<script>
+$('.comment').click(function{
+
+  $('.modal').modal('show')
+        var output = "";
+        for (var i = 0; i < res.length; i++) {
+            output += res[i].Comment;
+            output += " ~ ";
+            output += res[i].CommentedBy;
+            output += "<hr />";
+        }
+        $('.modal-body').html(output)
+
+})
+
+
+
+  
+
+$('.heart').click(function(){
+
+    $(this).addClass('is_animating');
+
+
+  
+}); 
+
+
+</script>
+</html>

@@ -2,17 +2,17 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Friesta | Homepage</title>
-    <link rel="stylesheet" href="./pages/styles/home.css">
-<<<<<<< HEAD
-    <script src="./scripts/jquery.min.js"></script>
-=======
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 
->>>>>>> 14226c79fce92bcb97faa12b3af6bbe784836f0b
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./pages/styles/modal.css">
+    <script src="./scripts/jquery.min.js"></script>
+    <link rel="stylesheet" href="./pages/styles/home.css">
+
 
 </head>
 
@@ -60,39 +60,21 @@
 
             </div>
             <div class="timeline">
-<<<<<<< HEAD
 
-=======
-                <div class="user-posts">
-                    <div class="username">
-                        <div class="profile-logo">
-                            <img src="#">
+            </div>
+            <div class="modal fade" role="dialog" tabindex="-1">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Comments</h4>
                         </div>
-                        <h3 class="user_name">_ashish_jaiswar_</h3>
-                    </div>
-                    <div class="time">
-                        <p class="post-time">10 min ago</p>
-                    </div>
-                    <div class="posted-area">
-                        <p>Hey my name is Ashish im new to friesta
-                            and i feel tha this is a amazing website.
-                            butv hjgj f ghfhf fghfhgf
-                        </p>
-                    </div>
-                    <div class="like-comment">
-                        <div class="heart"></div>
-                        <span class="like">5</span>
-                        <div class="comment">
-                            <img class="comment-icon" src="./pages/images/flash.svg" alt="comments">
-                            <span class="comment-btn">comments</span>
+                        <div class="modal-body" style="max-height: 400px; overflow-y: auto">
+                            <p>The content of your modal.</p>
                         </div>
-                    </div>
-                    <div class="more-comments">
-                        <p><b>_ashish_jaiswar_ ~</b> <span>Nice Post</span></p>
-                        <p class="more-btn">View all 5 comments</p>
+                        <div class="modal-footer"><button class="btn btn-light" type="button"
+                                data-dismiss="modal">Close</button></div>
                     </div>
                 </div>
->>>>>>> 14226c79fce92bcb97faa12b3af6bbe784836f0b
             </div>
         </div>
         <div class="people">
@@ -120,47 +102,90 @@
         }
     });
 </script>
-<script src="./scripts/like-animation.js"></script>
-<<<<<<< HEAD
+
 <script type="text/javascript">
     $(document).ready(function () {
         $.ajax({
             type: 'GET',
             url: 'index.php',
+            processData: false,
+            contentType: 'application/json',
             data: '',
             success: function (data) {
                 var posts = JSON.parse(data)
                 $.each(posts, function (index) {
-
+                    var d = new Date(posts[index].PostDate);
                     timeline = '<div class="user-posts"><div class="username">\
                         <div class="profile-logo">\
                             <img src="#">\
                         </div>\
-                        <h3 class="user_name">'+ posts[index].PostedBy + '</h3>\
+                        <h3 class="user_name"><a id="user-link" href="profile.php?username='+ posts[index].PostedBy + '">' + posts[index].PostedBy + '</a></h3>\
                     </div>\
                     <div class="time">\
-                        <p class="post-time">'+ posts[index].PostDate + '</p>\
+                        <p class="post-time">'+ d.toDateString() + '</p>\
                     </div>\
                     <div class="posted-area">\
                         <p> '+ posts[index].PostBody + '\
                         </p>\
                     </div>\
                     <div class="like-comment">\
-                        <div class="heart"></div>\
-                        <span class="like">'+ posts[index].Likes + '</span>\
-                        <div class="comment">\
-                            <img class="comment-icon" src="./pages/images/flash.svg" alt="comments">\
+                        <div class="like">\
+                            <div class="heart" data-id="'+ posts[index].PostId + '">\
+                                <p class="like-number">'+ posts[index].Likes + '</p>\
+                            </div>\
+                        </div>\
+                        <div class="comment"  data-postid="'+ posts[index].PostId + '" >\
+                            <img class="comment-icon" src="./pages/images/flash.svg">\
                             <span class="comment-btn">comments</span>\
                         </div>\
                     </div>\
-                    <div class="more-comments">\
-                        <p><b>_ashish_jaiswar_ ~</b> <span>Nice Post</span></p>\
-                        <p class="more-btn">View all 5 comments</p>\
-                    </div>\
+                    <div class="display" style="display: none;">\
+                      <input class="input-comment" type="text" placeholder="Add Comment"> <span><button>Comment</button></span>\
+                      <div class="posted-comment">\
+                        <p ><b>_ashish_jaiswar_ ~</b> <span>Nice Post</span></p>\
+                      </div>\
                 </div>'
                     $('.timeline').html(
                         $('.timeline').html() + timeline
                     )
+
+                    $('[data-postid]').click(function () {
+                        var buttonid = $(this).attr('data-postid');
+                        $.ajax({
+                            type: "GET",
+                            url: "api/comments?postid=" + $(this).attr('data-postid'),
+                            processData: false,
+                            contentType: "application/json",
+                            data: '',
+                            success: function (r) {
+                                var res = JSON.parse(r)
+                                showCommentsModal(res);
+
+                            },
+                            error: function (r) {
+                                console.log(r)
+                            }
+                        });
+                    });
+
+                    $('[data-id]').click(function () {
+
+                        var buttonid = $(this).attr('data-id');
+                        $.ajax({
+                            type: "POST",
+                            url: "api/likes?id=" + $(this).attr('data-id'),
+                            processData: false,
+                            contentType: "application/json",
+                            data: '',
+                            success: function (r) {
+                                var res = JSON.parse(r)
+                                $("[data-id='" + buttonid + "']").html('<p class="like-number">' + res.Likes + '</p>')
+                            },
+                            error: function (r) {
+                                console.log(r)
+                            }
+                        });
+                    })
                 })
             },
             error: function (data) {
@@ -168,9 +193,19 @@
             }
         })
     })
+    function showCommentsModal(res) {
+        $('.modal').modal('show')
+        var output = "";
+        for (var i = 0; i < res.length; i++) {
+            output += res[i].Comment;
+            output += " ~ ";
+            output += res[i].CommentedBy;
+            output += "<hr />";
+        }
+        $('.modal-body').html(output)
+    }
 </script>
 
-=======
->>>>>>> 14226c79fce92bcb97faa12b3af6bbe784836f0b
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
 
 </html>
