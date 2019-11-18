@@ -10,7 +10,8 @@ if (Login::isLoggedIn()) {
         $userid = Login::isLoggedIn();
         $showTimeline = True;
 } else {
-        die('Not logged in');
+        echo 'Not logged in';
+        die();
 }
 
 if (isset($_GET['postid'])) {
@@ -24,6 +25,7 @@ if (isset($_POST['comment'])) {
 if (isset($_POST['search'])) {
         Search::searchPosts();
 }
+
 ?>
 
 
@@ -52,3 +54,6 @@ $response = substr($response, 0, strlen($response) - 1);
 $response .= "]";
 
 echo $response;
+
+?>
+

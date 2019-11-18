@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="./pages/styles/modal.css">
     <script src="./scripts/jquery.min.js"></script>
     <link rel="stylesheet" href="./pages/styles/home.css">
-
-
 </head>
 
 <body>
@@ -24,8 +22,12 @@
             </a>
         </div>
         <div class="search">
-            <input type="text" placeholder="Search" class="search-input">
+            <input type="text" placeholder="Search" class="search-input sbox">
             <button type="submit">Search</button>
+            <div class="suggestions autocomplete">
+
+            </div>
+
         </div>
         <div class="nav-links">
             <ul class="links">
@@ -105,6 +107,40 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+
+        $('.sbox').focus(function () {
+            $('.autocomplete').html("")
+            $('.suggestions').css("display", "block")
+        })
+        $('.sbox').focusout(function () {
+            $('.suggestions').css("display", "none")
+        })
+
+        $('.sbox').keyup(function () {
+            $('.autocomplete').html("")
+            $.ajax({
+                type: "GET",
+                url: "api/search?query=" + $(this).val(),
+                processData: false,
+                contentType: "application/json",
+                data: '',
+                success: function (r) {
+                    r = JSON.parse(r)
+                    for (var i = 0; i < r.length; i++) {
+                        console.log(r[i].body)
+                        $('.autocomplete').html(
+                            $('.autocomplete').html() +
+                            '<a style="color:black;" href="profile.php?username=' + r[i].username + '#' + r[i].id + '"><p class="list">' + r[i].body + ' ~ <b>' + r[i].username + '</b></p>'
+                        )
+                    }
+                },
+                error: function (r) {
+                    console.log(r)
+                }
+            })
+        })
+
+
         $.ajax({
             type: 'GET',
             url: 'index.php',
@@ -112,8 +148,12 @@
             contentType: 'application/json',
             data: '',
             success: function (data) {
+                if (data == 'Not logged in') {
+                    window.location.href = 'signup-signin.html'
+                }
                 var posts = JSON.parse(data)
                 $.each(posts, function (index) {
+
                     var d = new Date(posts[index].PostDate);
                     timeline = '<div class="user-posts"><div class="username">\
                         <div class="profile-logo">\
@@ -207,5 +247,6 @@
 </script>
 
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+
 
 </html>
