@@ -33,10 +33,11 @@ if (isset($_POST['search'])) {
 
 <?php
 $followingposts = DB::query('SELECT posts.id, posts.body, posts.posted_at, posts.likes, users.`username` FROM users, posts, followers
-WHERE posts.user_id = followers.user_id
+WHERE (posts.user_id = followers.user_id
+OR posts.user_id = :userid)
 AND users.id = posts.user_id
 AND follower_id = :userid
-ORDER BY posts.likes DESC;', array(':userid' => $userid));
+ORDER BY posts.posted_at DESC;', array(':userid' => $userid, ':userid' => $userid));
 
 
 $response = "[";

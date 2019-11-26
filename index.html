@@ -45,8 +45,8 @@
         <div class="posts">
             <div class="create-post">
                 <div class="post-area">
-                    <textarea class="textarea" type="text" placeholder="What are you thinking?" rows="5"
-                        cols="80"></textarea>
+                    <textarea class="textarea" type="text" placeholder="What are you thinking?" rows="5" cols="80"
+                        id="postbody"></textarea>
                     <div class="post-button">
                         <button type="submit" id="post">Post</button>
 
@@ -71,10 +71,16 @@
                             <h4 class="modal-title">Comments</h4>
                         </div>
                         <div class="modal-body" style="max-height: 400px; overflow-y: auto">
-                            <p>The content of your modal.</p>
+                            <p>Hurry become first to comment....</p>
                         </div>
-                        <div class="modal-footer"><button class="btn btn-light" type="button"
-                                data-dismiss="modal">Close</button></div>
+
+                        <div class="modal-footer"> <textarea type="text" name="comment_content" id="comment_content"
+                                placeholder="comment" style="width: 73%; position: relative; top: -1px;"></textarea>
+                            <button class="postcomment" type="submit" \ name="submit">comment</button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-light" type="button"
+                                data-dismiss="modal"
+                                onclick="$('.modal-body').html('Hurry become first to comment....')">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -190,7 +196,9 @@
                     )
 
                     $('[data-postid]').click(function () {
+                        $('.modal').modal('show')
                         var buttonid = $(this).attr('data-postid');
+                        $('.postcomment').attr("data-commentid", buttonid)
                         $.ajax({
                             type: "GET",
                             url: "api/comments?postid=" + $(this).attr('data-postid'),
@@ -244,6 +252,43 @@
         }
         $('.modal-body').html(output)
     }
+    $('.postcomment').click(function () {
+        var data = '{ "comment_data" : "' + $('#comment_content').val() + '"}'
+        console.log(data)
+        $.ajax({
+            type: "POST",
+            url: "api/postcomment?postid=" + $(this).attr('data-commentid'),
+            processData: false,
+            contentType: "application/json",
+            data: data,
+            success: function (res) {
+               console.log(res)
+               
+            }
+        })
+    })
+
+    
+    $('#post').click(function () {
+        var postbody = '{"postdata" : "' + $('#postbody').val() + '"}'
+
+        $.ajax({
+            type: "POST",
+            url: "api/createpost",
+            processData: false,
+            contentType: "application/json",
+            data: postbody,
+            success: function (res) {
+                console.log(res)
+                if(res == "sucess"){
+                location.reload()
+                }
+                if(res == "Incorrect length!"){
+                    alert("Incorrect Length")
+                }
+            }
+        })
+    })
 </script>
 
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
