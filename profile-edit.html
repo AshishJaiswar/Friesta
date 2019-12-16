@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Friesta | Profile Edit</title>
+    <script src="./scripts/jquery.min.js"></script>
+    <link rel="stylesheet" href="pages/styles/profile-edit.css">
+</head>
+<body>
+<div class="header">
+        <div class="logo">
+            <a href="#">
+                <h1 id="friesta">Friesta</h1>
+            </a>
+        </div>
+        <div class="search">
+            <input type="text" placeholder="Search" class="search-input sbox">
+            <button type="submit">Search</button>
+            <div class="suggestions autocomplete">
+
+            </div>
+
+        </div>
+        <div class="nav-links">
+            <ul class="links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Chats</a></li>
+                <li><a href="#">Notifications</a></li>
+                <li><a href="#">My Profile</a></li>
+            </ul>
+        </div>
+    </div>
+    
+
+    <div class="container">
+        <div class="heading">
+            <h2><u>Edit Profile</u></h2>
+        </div>
+
+        <div class="user-section">
+            <div class="user-data">   
+                <div class="now-edit"><p><b>Name</b>:<input type="text" placeholder="Full Name" id="name" name="name"></p></div>
+                <div class="now-edit"><p><b>Username</b>:<input type="text"  id="username" value="" name="username" value="" disabled></p></div>
+                <div class="now-edit"><p><b>Lives in</b>:<input type="text" placeholder="Lives in" id="lives" name="lives"></p></div>
+                <div class="now-edit"><p><b>Relationship</b>:<input type="text" placeholder="Relationship" id="relationship" name="relationship"></p></div>
+                <div class="now-edit"><p><b>Bio</b>:<input type="text" placeholder="Boi" id="bio" name="bio"></p></div>
+            </div>
+            
+            <div class="user-profile">
+                <div class="profile"><b>Profile image</b>:
+                                <input type="file" hidden="hidden" id="real-file" name="profileimg">
+                                <input type="text" class="browse" placeholder="Upload Image" id="custom-text">
+                                <input type="button" class="choose" id="custom-button" value="Choose Image">
+
+                </div>
+                <div class="image-property">
+                    Image size must be min 100*100 and max 600*600
+                </div>
+                <div class="upload" style="text-align: center;height: 40px;width:100%;">
+                    <button class="u"  style="margin-top: 3px;background-color: #d63031;" id="profile">Upload</button>
+                </div>
+                <div class="message" style="position: relative;top:10px;text-align: center;font-size: 15px;">
+                    
+                </div>
+            </div>
+          
+        </div>
+        
+        <div class="buttons">
+            <div class="cancel">
+                <button class="color1" type="submit"  id="c" >Cancel</button>
+            </div>
+            <div class="save">
+                <button  class="color" type="submit" id="s" >Save</button>
+            </div>
+        </div>
+    </div>
+    
+</body>
+<script type="text/javascript">
+    const realFileBtn = document.getElementById("real-file");
+    const customBtn = document.getElementById("custom-button");
+    const customTxt = document.getElementById("custom-text");
+
+    customBtn.addEventListener("click", function () {
+        realFileBtn.click();
+    });
+
+
+    realFileBtn.addEventListener("change", function () {
+        if (realFileBtn.value) {
+            customTxt.value = realFileBtn.value.match(
+                /[\/\\]([\w\d\s\.\-\(\)]+)$/
+            )[1];
+        } else {
+            customTxt.value = "No file chosen, yet.";
+        }
+    });
+
+
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+
+    $('#c').click(function(e){
+        e.preventDefault();
+        window.location.href = "index.html"
+    })
+
+    $('#profile').click(function(){
+          var fd =new FormData();
+          var files = $('#real-file')[0].files[0];
+          fd.append('profileimg',files)
+
+$.ajax({
+                type: "POST",
+                url: "api/changeprofile",
+                processData: false,
+                contentType: false,
+                data: fd,
+                success: function(res){
+                    $('.message').append(res)
+                }
+})
+
+    })
+    $('#s').click(function(event){
+        $name = $('#name').val()
+        $lives = $('#lives').val()
+        $relationship = $('#relationship').val()
+        $bio = $('#bio').val() 
+        //var inputfile  = document.getElementById('real-file')
+        
+        if($name == "" || $lives == "" || $relationship == "" || $bio == ""){
+            alert("Fields cannot be empty!")
+            
+        }else if($name.length >=20 || $name.length <=5 ){
+            alert("Name length must range 5 to 20!")
+            
+        }else if($lives.length >=30 || $lives.length <=5 ){
+            alert("Address length must range 5 to 30!")
+            
+        }
+        else if($bio.length <=10  || $bio.length >=200  ){
+            alert("Bio length must range 10 to 200!")
+            
+        }else if($relationship.length <=4  || $relationship.length >=15  ){
+            alert("relationship status length must range 4 to 15!")
+            
+        }else{
+        var formData = '{"name":"'+$name+'","lives":"'+$lives+'","relationship":"'+$relationship+'","bio":"'+$bio+'"}' 
+        //console.log(inputfile.files[0])
+        event.preventDefault();
+        $.ajax({
+                type: "POST",
+                url: "api/editprofile",
+                processData: false,
+                contentType: "application/json",
+                data: formData,
+                success: function(res){
+                    console.log(res)
+                    
+                },
+                error: function(){
+                    console.log(res)
+                }
+        })
+        }
+        
+    })
+
+    
+    $.ajax({
+        type: 'GET',
+        url: 'api/users',
+        processData: false,
+        contentType: "application/json",
+        data: "",
+        success: function(res){
+            $('#username').val(res) 
+        },
+        error: function(){
+            console.log(res)
+        }
+    })
+})
+
+</script>
+</html>

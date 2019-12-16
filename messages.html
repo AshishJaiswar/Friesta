@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chats</title>
+    <link rel="stylesheet" href="./pages/styles/messages.css">
+    <script src="./scripts/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">
+            <a href="#">
+                <h1 id="friesta">Friesta</h1>
+            </a>
+        </div>
+        <div class="search">
+            <input type="text" placeholder="Search" class="search-input sbox">
+            <button type="submit">Search</button>
+            <div class="suggestions autocomplete">
+
+            </div>
+
+        </div>
+        <div class="nav-links">
+            <ul class="links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Chats</a></li>
+                <li><a href="#">Notifications</a></li>
+                <li><a href="#">My Profile</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <div id="frame">
+            <div id="sidepanel">
+                <div id="profile">
+                    <div class="wrap">
+                        <img id="profile-img" src="http://emilcarlsson.se/assets/mikeross.png" class="online" alt="" />
+                        <p>Ashish Jaiswar</p>
+                        <i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
+                        <div id="status-options">
+                            <ul>
+                                <li id="status-online" class="active"><span class="status-circle"></span>
+                                    <p>Online</p>
+                                </li>
+                                <li id="status-away"><span class="status-circle"></span>
+                                    <p>Away</p>
+                                </li>
+                                <li id="status-busy"><span class="status-circle"></span>
+                                    <p>Busy</p>
+                                </li>
+                                <li id="status-offline"><span class="status-circle"></span>
+                                    <p>Offline</p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="expanded">
+                            <label for="twitter"><i class="fa fa-facebook fa-fw" aria-hidden="true"></i></label>
+                            <input name="twitter" type="text" value="mikeross" />
+                            <label for="twitter"><i class="fa fa-twitter fa-fw" aria-hidden="true"></i></label>
+                            <input name="twitter" type="text" value="ross81" />
+                            <label for="twitter"><i class="fa fa-instagram fa-fw" aria-hidden="true"></i></label>
+                            <input name="twitter" type="text" value="mike.ross" />
+                        </div>
+                    </div>
+                </div>
+                <div id="search">
+                    <label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
+                    <input type="text" placeholder="Search User..." />
+                </div>
+                <div id="contacts">
+                    <ul id="users">
+
+                    </ul>
+                </div>
+
+            </div>
+            <div class="content">
+                <div class="contact-profile">
+                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+                    <p>Harvey Specter</p>
+                    <div class="social-media">
+                        <i class="fa fa-facebook" aria-hidden="true"></i>
+                        <i class="fa fa-twitter" aria-hidden="true"></i>
+                        <i class="fa fa-instagram" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="messages">
+                    <ul id="m">
+
+                    </ul>
+                </div>
+                <div class="message-input">
+                    <div class="wrap">
+                        <input type="text" id="messagecontent" placeholder="Write your message..." />
+                        <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
+                        <button class="submit" id="sendmessage"><i class="fa fa-paper-plane"
+                                aria-hidden="true">Send</i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    SENDER =  window.location.hash.split('#')[1];
+    USERNAME = ""
+    $(document).ready(function () {
+
+        $(window).on('hashchange', function() {
+                    location.reload()
+            })
+            
+        $('#sendmessage').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "api/message",
+                processData: false,
+                contentType: "application/json",
+                data: '{ "body": "' + $("#messagecontent").val() + '", "receiver": "' + SENDER + '" }',
+                success: function (r) {
+                    location.reload()
+                },
+                error: function (r) {
+                }
+            })
+        })
+
+        $.ajax({
+            type: "GET",
+            url: "api/musers",
+            processData: false,
+            contentType: "application/json",
+            data: '',
+            success: function (r) {
+                r = JSON.parse(r)
+                for (var i = 0; i < r.length; i++) {
+                    $('#users').append('<li id="user'+i+'" data-id='+r[i].id+' class="contact">\
+                            <div class="wrap">\
+                                <span class="contact-status online"></span>\
+                                <img src="http://emilcarlsson.se/assets/louislitt.png" alt="" />\
+                                <div class="meta">\
+                                    <p class="name">'+ r[i].username + '</p>\
+                                </div>\
+                            </div>\
+                        </li>')
+                    $('#user' + i).click(function () {
+                        window.location = 'messages.html#' + $(this).attr('data-id')
+                    })
+                }
+            }
+        })
+        $.ajax({
+            type: 'GET',
+            url: "api/messages?sender=" + SENDER,
+            processData: false,
+            contentType: 'application/json',
+            data: '',
+            success: function (r) {
+                r = JSON.parse(r)
+                $.ajax({
+                    type: "GET",
+                    url: "api/users",
+                    processData: false,
+                    contentType: "application/json",
+                    data: '',
+                    success: function (u) {
+                        USERNAME = u;
+                        for (var i = 0; i < r.length; i++) {
+                            if (r[i].Sender == USERNAME) {
+                                $('#m').append('<li class="replies">\
+                            <img src="" alt="" />\
+                            <p>'+ r[i].body + '</p>\
+                        </li>')
+                            } else {
+                                $('#m').append('<li class="sent">\
+                            <img src="" alt="" />\
+                            <p>'+ r[i].body + '\
+                            </p>\
+                        </li>')
+                            }
+                        }
+                    }
+                })
+            },
+            error: function () {
+                console.log(r)
+            }
+        })
+    })
+</script>
+
+</html>

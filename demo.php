@@ -1,5 +1,5 @@
 <?php
-
+/*
 require_once('PHPMailer/PHPMailerAutoload.php');
 
 $mail = new PHPMailer();
@@ -20,4 +20,4 @@ if (!$mail->send()) {
     echo "Mailer Error: " . $mail->ErrorInfo;
 } else {
     echo "Message sent!";
-}
+}*/

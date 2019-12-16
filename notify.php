@@ -9,7 +9,6 @@ if (Login::isLoggedIn()) {
     echo 'Not logged in';
 }
 
-echo "<h1>Notifcations</h1>";
 
 if (DB::query('SELECT * FROM notifications WHERE receiver=:userid', array(':userid' => $userid))) {
 
@@ -18,14 +17,14 @@ if (DB::query('SELECT * FROM notifications WHERE receiver=:userid', array(':user
         if ($n['type'] == 1) {
             $senderName = DB::query('SELECT username FROM users WHERE id=:senderid', array(':senderid' => $n['sender']))[0]['username'];
             if ($n['extra'] == "") {
-                echo "You got a notification!<hr />";
+                echo "You got a notification!<hr/><br/>";
             } else {
                 $extra = json_decode($n['extra']);
-                echo $senderName . " ~ mentioned you in a post! - " . $extra->postbody . "<hr />";
+                echo $senderName . " ~ mentioned you in a post! - " . $extra->postbody . "<hr/><br/>";
             }
         } else if ($n['type'] == 2) {
             $senderName = DB::query('SELECT username FROM users WHERE id=:senderid', array(':senderid' => $n['sender']))[0]['username'];
-            echo $senderName . " ~ liked your post!<hr />";
+            echo $senderName . " ~ liked your post!<hr/><br/>";
         }
     }
 }

@@ -2,6 +2,7 @@
 
 include('classes/DB.php');
 include('classes/Login.php');
+include('classes/Image.php');
 $showTimeline = False;
 if (Login::isLoggedIn()) {
         $userid = Login::isLoggedIn();

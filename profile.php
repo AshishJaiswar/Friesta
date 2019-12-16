@@ -4,7 +4,12 @@ include('./classes/Login.php');
 include('./classes/Post.php');
 include('./classes/Image.php');
 include('./classes/Notify.php');
+if (Login::isLoggedIn()) {
 
+        $userid = Login::isLoggedIn();
+    } else {
+        echo 'Not logged in';
+    }
 $username = "";
 $verified = False;
 $isFollowing = False;
@@ -15,6 +20,7 @@ if (isset($_GET['username'])) {
                 $verified =  DB::query('SELECT verified FROM users WHERE username=:username', array(':username' => $_GET['username']))[0]['verified'];
                 //profile
                 $name = DB::query('SELECT fullname FROM  profiles WHERE username =:username', array(':username' => $_GET['username']));
+                $profileimg = DB::query('SELECT profileimg FROM  users WHERE username =:username', array(':username' => $_GET['username']));
                 $lives_in = DB::query('SELECT lives_in FROM  profiles WHERE username =:username', array(':username' => $_GET['username']));
                 $relationship = DB::query('SELECT relationship FROM  profiles WHERE username =:username', array(':username' => $_GET['username']));
                 $joined_by = DB::query('SELECT joined_by FROM  profiles where username =:username', array(':username' => $_GET['username']))[0]['joined_by'];
@@ -120,7 +126,7 @@ if (isset($_GET['username'])) {
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Firesta | Profile</title>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="./pages/styles/modal.css">
+        <link rel="stylesheet" href="./pages/styles/modal.css">
         <script src="./scripts/jquery.min.js"></script>
         <link rel="stylesheet" href="pages/styles/profile.css">
 </head>
@@ -149,8 +155,8 @@ if (isset($_GET['username'])) {
         <div class="container">
                 <div class="profile-image">
                         <div class="profile-div">
-                                <div class="circle">
-                                        <img class="default-image" src="pages/images/user.png">
+                                <div class="circle" style="border:1px solid #979a9a; overflow: hidden;">
+                                        <img class="default-image" src="<?php echo $profileimg[0]['profileimg']; ?>">
                                 </div>
                         </div>
                         <div class="edit">
@@ -160,18 +166,24 @@ if (isset($_GET['username'])) {
                 <div class="info">
                         <div class="user-detail">
                                 <div class="name-address">
-                                        <h1 class="name"><?php if($name != null){echo $name[0]['fullname'];} ?><?php if ($verified) {
-                                                                                        echo "<span><img class='verified' src='pages/images/verified.png'></span>";
-                                                                                }  ?></h1>
+                                        <h1 class="name"><?php if ($name != null) {
+                                                                        echo $name[0]['fullname'];
+                                                                } ?><?php if ($verified) {
+                                                                                echo "<span><img class='verified' src='pages/images/verified.png'></span>";
+                                                                        }  ?></h1>
                                         <p id="u" style="color:#0984e3;font-size:14px;">@<?php echo $username; ?></p>
                                         <p class="location"><span><?php if ($lives_in != null) {
                                                                                 echo '<img class="location-icon" src="pages/images/location-gray-512.png">';
-                                                                        } ?></span><?php if($lives_in != null){echo $lives_in[0]['lives_in']; }?></p>
+                                                                        } ?></span><?php if ($lives_in != null) {
+                                                                                                echo $lives_in[0]['lives_in'];
+                                                                                        } ?></p>
                                 </div>
                                 <div class="other-detail">
                                         <p> <?php if ($relationship != null) {
-                                                        echo "<b>Relationship ~ </b>" ;
-                                                } ?><span><?php if($relationship != null){echo $relationship[0]['relationship'];} ?></span> </p>
+                                                        echo "<b>Relationship ~ </b>";
+                                                } ?><span><?php if ($relationship != null) {
+                                                                        echo $relationship[0]['relationship'];
+                                                                } ?></span> </p>
                                         <p><?php if ($joined_by != null) {
                                                         echo "<b>Joined ~ </b>";
                                                 } ?> <span><?php echo $joined_by; ?></span></p>
@@ -187,11 +199,22 @@ if (isset($_GET['username'])) {
                 <div class="followarea">
                         <div class="follow-message">
                                 <div class="follow">
-                                        <button class="follow-user">Follow</button>
-                                        <button class="unfollow-user" hidden="hidden">Unfollow</button>
+                                        <form action="profile.php?username=<?php echo $username; ?>" method="post" id="followform">
+                                                <?php
+                                                if ($userid != $followerid) {
+                                                        if ($isFollowing) {
+                                                                echo '<button class="unfollow-user" name="unfollow">Unfollow</button>';
+                                                        } else {
+                                                                echo '<button class="follow-user" name="follow">Follow</button>';
+                                                        }
+                                                }
+                                                ?>
+                                        </form>
+
+
                                 </div>
                                 <div class="message">
-                                        <button class="message-user">Message</button>
+                                        <a href="messages.html"> <button class="message-user">Message</button></a>
                                 </div>
                         </div>
                         <div class="count">
@@ -218,61 +241,66 @@ if (isset($_GET['username'])) {
 
                 </div>
                 <div class="modal fade" role="dialog" tabindex="-1">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Comments</h4>
+                        <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                        <div class="modal-header">
+                                                <h4 class="modal-title">Comments</h4>
+                                        </div>
+                                        <div class="modal-body" style="max-height: 400px; overflow-y: auto">
+                                                <p>The content of your modal.</p>
+                                        </div>
+                                        <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button></div>
+                                </div>
                         </div>
-                        <div class="modal-body" style="max-height: 400px; overflow-y: auto">
-                            <p>The content of your modal.</p>
-                        </div>
-                        <div class="modal-footer"><button class="btn btn-light" type="button"
-                                data-dismiss="modal">Close</button></div>
-                    </div>
                 </div>
-            </div>
         </div>
         </div>
-        
+
 </body>
 <script type="text/javascript">
-
-function scrollToAnchor(aid){
+         function scrollToAnchor(aid){
+    try {
     var aTag = $(aid);
         $('html,body').animate({scrollTop: aTag.offset().top},'slow');
+        } catch (error) {
+                console.log(error)
+        }
     }
 
-    $(document).ready(function () {
-        $.ajax({
-            type: 'GET',
-            url: "api/profileposts?username=<?php echo $username; ?>",
-            processData: false,
-            contentType: 'application/json',
-            data: '',
-            success: function (data) {
-                var posts = JSON.parse(data)
-                $.each(posts, function (index) {
-                    var d = new Date(posts[index].PostDate);
-                    timeline = '<div class="user-posts" id='+posts[index].PostId+'><div class="username">\
-                        <div class="profile-logo">\
-                            <img src="#">\
+        
+        $(document).ready(function() {
+                $.ajax({
+                        type: 'GET',
+                        url: "api/profileposts?username=<?php echo $username; ?>",
+                        processData: false,
+                        contentType: 'application/json',
+                        data: '',
+                        success: function(data) {
+                                var posts = JSON.parse(data)
+                                $.each(posts, function(index) {
+                                        var d = new Date(posts[index].PostDate);
+
+                                        if (posts[index].PostImage == "") {
+                                                timeline = '<div class="user-posts" id=' + posts[index].PostId + '><div class="username">\
+                        <div class="profile-logo" style="overflow:hidden">\
+                        <img src="' + posts[index].ProfileImg + '" style="height:30px;width:30px;">\
                         </div>\
-                        <h3 class="user_name"><a id="user-link" href="profile.php?username='+ posts[index].PostedBy + '">' + posts[index].PostedBy + '</a></h3>\
+                        <h3 class="user_name"><a id="user-link" href="profile.php?username=' + posts[index].PostedBy + '">' + posts[index].PostedBy + '</a></h3>\
                     </div>\
                     <div class="time">\
-                        <span  style="font-size:9px;position:relative;top:10px;right:-5px;margin-top:20px;">'+ d.toDateString() + '</span>\
+                        <span  style="font-size:9px;position:relative;top:10px;right:-5px;margin-top:20px;">' + d.toDateString() + '</span>\
                     </div>\
                     <div class="posted-area">\
-                        <p> '+ posts[index].PostBody + '\
+                        <p> ' + posts[index].PostBody + '\
                         </p>\
                     </div>\
                     <div class="like-comment">\
                         <div class="like">\
-                            <div class="heart" data-id="'+ posts[index].PostId + '">\
-                                <p class="like-number">'+ posts[index].Likes + '</p>\
+                            <div class="heart" data-id="' + posts[index].PostId + '">\
+                                <p class="like-number">' + posts[index].Likes + '</p>\
                             </div>\
                         </div>\
-                        <div class="comment"  data-postid="'+ posts[index].PostId + '" >\
+                        <div class="comment"  data-postid="' + posts[index].PostId + '" >\
                             <img class="comment-icon" src="./pages/images/flash.svg">\
                             <span class="comment-btn">comments</span>\
                         </div>\
@@ -283,66 +311,110 @@ function scrollToAnchor(aid){
                         <p ><b>_ashish_jaiswar_ ~</b> <span>Nice Post</span></p>\
                       </div>\
                 </div>'
-                    $('.timeline').html(
-                        $('.timeline').html() + timeline
-                    )
+                                        } else {
+                                                timeline = '<div class="user-posts" id=' + posts[index].PostId + '><div class="username">\
+                        <div class="profile-logo" style="overflow:hidden">\
+                        <img src="' + posts[index].ProfileImg + '" style="height:30px;width:30px;">\
+                        </div>\
+                        <h3 class="user_name"><a id="user-link" href="profile.php?username=' + posts[index].PostedBy + '">' + posts[index].PostedBy + '</a></h3>\
+                    </div>\
+                    <div class="time">\
+                        <span  style="font-size:9px;position:relative;top:10px;right:-5px;margin-top:20px;">' + d.toDateString() + '</span>\
+                    </div>\
+                    <div class="posted-area">\
+                        <p> ' + posts[index].PostBody + '\
+                        </p>\
+                        <img src="" class="postimg" data-tempsrc="' + posts[index].PostImage + '" id="img' + posts[index].PostId + '" style="opacity: 0;transition: all 2s ease-in-out;width: 100%;">\
+                    </div>\
+                    <div class="like-comment">\
+                        <div class="like">\
+                            <div class="heart" data-id="' + posts[index].PostId + '">\
+                                <p class="like-number">' + posts[index].Likes + '</p>\
+                            </div>\
+                        </div>\
+                        <div class="comment"  data-postid="' + posts[index].PostId + '" >\
+                            <img class="comment-icon" src="./pages/images/flash.svg">\
+                            <span class="comment-btn">comments</span>\
+                        </div>\
+                    </div>\
+                    <div class="display" style="display: none;">\
+                      <input class="input-comment" type="text" placeholder="Add Comment"> <span><button>Comment</button></span>\
+                      <div class="posted-comment">\
+                        <p ><b>_ashish_jaiswar_ ~</b> <span>Nice Post</span></p>\
+                      </div>\
+                </div>'
+                                        }
 
-                    $('[data-postid]').click(function () {
-                        var buttonid = $(this).attr('data-postid');
-                        $.ajax({
-                            type: "GET",
-                            url: "api/comments?postid=" + $(this).attr('data-postid'),
-                            processData: false,
-                            contentType: "application/json",
-                            data: '',
-                            success: function (r) {
-                                var res = JSON.parse(r)
-                                showCommentsModal(res);
+                                        $('.timeline').html(
+                                                $('.timeline').html() + timeline
+                                        )
 
-                            },
-                            error: function (r) {
-                                console.log(r)
-                            }
-                        });
-                    });
+                                        $('[data-postid]').click(function() {
+                                                var buttonid = $(this).attr('data-postid');
+                                                $.ajax({
+                                                        type: "GET",
+                                                        url: "api/comments?postid=" + $(this).attr('data-postid'),
+                                                        processData: false,
+                                                        contentType: "application/json",
+                                                        data: '',
+                                                        success: function(r) {
+                                                                var res = JSON.parse(r)
+                                                                showCommentsModal(res);
 
-                    $('[data-id]').click(function () {
+                                                        },
+                                                        error: function(r) {
+                                                                console.log(r)
+                                                        }
+                                                });
+                                        });
 
-                        var buttonid = $(this).attr('data-id');
-                        $.ajax({
-                            type: "POST",
-                            url: "api/likes?id=" + $(this).attr('data-id'),
-                            processData: false,
-                            contentType: "application/json",
-                            data: '',
-                            success: function (r) {
-                                var res = JSON.parse(r)
-                                $("[data-id='" + buttonid + "']").html('<p class="like-number">' + res.Likes + '</p>')
-                            },
-                            error: function (r) {
-                                console.log(r)
-                            }
-                        });
-                    })
+                                        $('[data-id]').click(function() {
+
+                                                var buttonid = $(this).attr('data-id');
+                                                $.ajax({
+                                                        type: "POST",
+                                                        url: "api/likes?id=" + $(this).attr('data-id'),
+                                                        processData: false,
+                                                        contentType: "application/json",
+                                                        data: '',
+                                                        success: function(r) {
+                                                                var res = JSON.parse(r)
+                                                                $("[data-id='" + buttonid + "']").html('<p class="like-number">' + res.Likes + '</p>')
+                                                        },
+                                                        error: function(r) {
+                                                                console.log(r)
+                                                        }
+                                                });
+                                        })
+                                })
+
+                                $('.postimg').each(function() {
+                                        this.src = $(this).attr('data-tempsrc')
+                                        this.onload = function() {
+                                                this.style.opacity = '1'
+                                        }
+                                })
+
+
+                                scrollToAnchor(location.hash)
+                        },
+                        error: function(data) {
+                                console.log(data)
+                        }
                 })
-                scrollToAnchor(location.hash)
-            },
-            error: function (data) {
-                console.log(data)
-            }
         })
-    })
-    function showCommentsModal(res) {
-        $('.modal').modal('show')
-        var output = "";
-        for (var i = 0; i < res.length; i++) {
-            output += res[i].Comment;
-            output += " ~ ";
-            output += res[i].CommentedBy;
-            output += "<hr />";
+
+        function showCommentsModal(res) {
+                $('.modal').modal('show')
+                var output = "";
+                for (var i = 0; i < res.length; i++) {
+                        output += res[i].Comment;
+                        output += " ~ ";
+                        output += res[i].CommentedBy;
+                        output += "<hr />";
+                }
+                $('.modal-body').html(output)
         }
-        $('.modal-body').html(output)
-    }
 </script>
 
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>

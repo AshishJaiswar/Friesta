@@ -26,18 +26,23 @@ if (isset($_POST['search'])) {
         Search::searchPosts();
 }
 
+if (isset($_GET['post'])) {
+        echo $_GET['post'];
+}
+
+
 ?>
 
 
 
 
 <?php
-$followingposts = DB::query('SELECT posts.id, posts.body, posts.posted_at, posts.likes, users.`username` FROM users, posts, followers
-WHERE (posts.user_id = followers.user_id
+$followingposts = DB::query('SELECT posts.id, posts.body, posts.posted_at, posts.postimg, posts.likes, users.`username`, users.profileimg FROM users, posts, followers
+WHERE  (posts.user_id = followers.user_id
 OR posts.user_id = :userid)
 AND users.id = posts.user_id
 AND follower_id = :userid
-ORDER BY posts.posted_at DESC;', array(':userid' => $userid, ':userid' => $userid));
+ORDER BY posts.likes DESC ;', array(':userid' => $userid), array(':userid' => $userid));
 
 
 $response = "[";
@@ -48,6 +53,8 @@ foreach ($followingposts as $post) {
         $response .= '"PostBody": "' . $post['body'] . '",';
         $response .= '"PostedBy": "' . $post['username'] . '",';
         $response .= '"PostDate": "' . $post['posted_at'] . '",';
+        $response .= '"PostImage": "' . $post['postimg'] . '",';
+        $response .= '"ProfileImg": "' . $post['profileimg'] . '",';
         $response .= '"Likes": ' . $post['likes'] . '';
         $response .= "},";
 }

@@ -44,22 +44,22 @@
         </div>
         <div class="posts">
             <div class="create-post">
-                <div class="post-area">
-                    <textarea class="textarea" type="text" placeholder="What are you thinking?" rows="5" cols="80"
-                        id="postbody"></textarea>
-                    <div class="post-button">
-                        <button type="submit" id="post">Post</button>
+                <form action="api/createpost" method="post" enctype="multipart/form-data">
+                    <div class="post-area">
+                        <textarea class="textarea" type="text" placeholder="What are you thinking?" rows="5" cols="80"
+                            id="postbody" name="postbody"></textarea>
+                        <div class="post-button">
+                            <button type="submit" id="post" name="post">Post</button>
 
-                        <div class="select">
-                            <input type="file" hidden="hidden" id="real-file">
-                            <input type="text" class="browse" placeholder="Upload Image" id="custom-text">
-                            <button type="button" class="choose" id="custom-button">Choose image</button>
+                            <div class="select">
+                                <input type="file" hidden="hidden" id="real-file" name="postimg">
+                                <input type="text" class="browse" placeholder="Upload Image" id="custom-text">
+                                <button type="button" class="choose" id="custom-button">Choose image</button>
+                            </div>
+
                         </div>
-
                     </div>
-
-                </div>
-
+                </form>
             </div>
             <div class="timeline">
 
@@ -118,8 +118,8 @@
             $('.autocomplete').html("")
             $('.suggestions').css("display", "block")
         })
-        $('.sbox').focusout(function () {
-            $('.suggestions').css("display", "none")
+        $('body').click(function () {
+            $('.autocomplete').html("")
         })
 
         $('.sbox').keyup(function () {
@@ -133,10 +133,10 @@
                 success: function (r) {
                     r = JSON.parse(r)
                     for (var i = 0; i < r.length; i++) {
-                        console.log(r[i].body)
                         $('.autocomplete').html(
                             $('.autocomplete').html() +
-                            '<a style="color:black;" href="profile.php?username=' + r[i].username + '#' + r[i].id + '"><p class="list">' + r[i].body + ' ~ <b>' + r[i].username + '</b></p>'
+                            '<a style="color:black;" href="profile.php?username='+r[i].username +'#'+r[i].id+'"><p class="list">' + r[i].body + ' ~ <b>' + r[i].username + '</b></p></a>'
+                            
                         )
                     }
                 },
@@ -145,6 +145,8 @@
                 }
             })
         })
+
+
 
 
         $.ajax({
@@ -158,12 +160,15 @@
                     window.location.href = 'signup-signin.html'
                 }
                 var posts = JSON.parse(data)
+                
                 $.each(posts, function (index) {
 
                     var d = new Date(posts[index].PostDate);
+                     
+                    if (posts[index].PostImage == "") {
                     timeline = '<div class="user-posts"><div class="username">\
-                        <div class="profile-logo">\
-                            <img src="#">\
+                        <div class="profile-logo" style="overflow:hidden">\
+                        <img src="'+posts[index].ProfileImg+'" style="height:30px;width:30px;">\
                         </div>\
                         <h3 class="user_name"><a id="user-link" href="profile.php?username='+ posts[index].PostedBy + '">' + posts[index].PostedBy + '</a></h3>\
                     </div>\
@@ -191,9 +196,44 @@
                         <p ><b>_ashish_jaiswar_ ~</b> <span>Nice Post</span></p>\
                       </div>\
                 </div>'
+                    }
+                    else{
+                        timeline = '<div class="user-posts" id='+posts[index].PostId+'><div class="username">\
+                        <div class="profile-logo" style="overflow:hidden">\
+                            <img src="'+posts[index].ProfileImg+'" style="height:30px;width:30px;">\
+                        </div>\
+                        <h3 class="user_name"><a id="user-link" href="profile.php?username='+ posts[index].PostedBy + '">' + posts[index].PostedBy + '</a></h3>\
+                    </div>\
+                    <div class="time">\
+                        <span  style="font-size:9px;position:relative;top:10px;right:-5px;margin-top:20px;">'+ d.toDateString() + '</span>\
+                    </div>\
+                    <div class="posted-area">\
+                        <p> '+ posts[index].PostBody + '\
+                        </p>\
+                        <img src="" class="postimg" data-tempsrc="'+posts[index].PostImage+'" id="img'+posts[index].PostId+'" style="opacity: 0;transition: all 2s ease-in-out;width: 100%;">\
+                    </div>\
+                    <div class="like-comment">\
+                        <div class="like">\
+                            <div class="heart" data-id="'+ posts[index].PostId + '">\
+                                <p class="like-number">'+ posts[index].Likes + '</p>\
+                            </div>\
+                        </div>\
+                        <div class="comment"  data-postid="'+ posts[index].PostId + '" >\
+                            <img class="comment-icon" src="./pages/images/flash.svg">\
+                            <span class="comment-btn">comments</span>\
+                        </div>\
+                    </div>\
+                    <div class="display" style="display: none;">\
+                      <input class="input-comment" type="text" placeholder="Add Comment"> <span><button>Comment</button></span>\
+                      <div class="posted-comment">\
+                        <p ><b>_ashish_jaiswar_ ~</b> <span>Nice Post</span></p>\
+                      </div>\
+                </div>'
+                    }
                     $('.timeline').html(
                         $('.timeline').html() + timeline
                     )
+
 
                     $('[data-postid]').click(function () {
                         $('.modal').modal('show')
@@ -208,13 +248,15 @@
                             success: function (r) {
                                 var res = JSON.parse(r)
                                 showCommentsModal(res);
-
+                                console.log(r)
                             },
                             error: function (r) {
                                 console.log(r)
                             }
                         });
                     });
+
+
 
                     $('[data-id]').click(function () {
 
@@ -234,6 +276,12 @@
                             }
                         });
                     })
+                })
+                $('.postimg').each(function(){
+                        this.src =  $(this).attr('data-tempsrc')
+                        this.onload  = function(){
+                                this.style.opacity = '1'
+                        }
                 })
             },
             error: function (data) {
@@ -262,33 +310,33 @@
             contentType: "application/json",
             data: data,
             success: function (res) {
-               console.log(res)
-               
-            }
-        })
-    })
-
-    
-    $('#post').click(function () {
-        var postbody = '{"postdata" : "' + $('#postbody').val() + '"}'
-
-        $.ajax({
-            type: "POST",
-            url: "api/createpost",
-            processData: false,
-            contentType: "application/json",
-            data: postbody,
-            success: function (res) {
                 console.log(res)
-                if(res == "sucess"){
-                location.reload()
-                }
-                if(res == "Incorrect length!"){
-                    alert("Incorrect Length")
-                }
             }
         })
     })
+/*
+        $('#post').click(function () {
+    
+            var postbody = '{"postdata" : "' + $('#postbody').val() + '"}'
+    
+            $.ajax({
+                type: "POST",
+                url: "api/createpost",
+                processData: false,
+                contentType: "application/json",
+                data: postbody,
+                success: function (res) {
+                    console.log(res)
+                    if (res == "sucess") {
+                        location.reload()
+                    }
+                    if (res == "Incorrect length!") {
+                        alert("Incorrect Length")
+                    }
+                }
+            })
+    
+        })*/
 </script>
 
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
