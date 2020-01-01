@@ -7,9 +7,9 @@ include('./classes/Notify.php');
 if (Login::isLoggedIn()) {
 
         $userid = Login::isLoggedIn();
-    } else {
+} else {
         echo 'Not logged in';
-    }
+}
 $username = "";
 $verified = False;
 $isFollowing = False;
@@ -129,6 +129,34 @@ if (isset($_GET['username'])) {
         <link rel="stylesheet" href="./pages/styles/modal.css">
         <script src="./scripts/jquery.min.js"></script>
         <link rel="stylesheet" href="pages/styles/profile.css">
+        <style>
+        .suggestions {
+  width: 96.2%;
+  border: 1px solid lightslategray;
+  border-bottom: none;
+  position: relative;
+  z-index: 100;
+  opacity: 1;
+  background: white;
+  border-radius: 2px;
+  display:none;
+}
+
+
+.list {
+  padding: 10px;
+  font-size: 14px;
+  border-bottom: 1px solid lightslategray;
+
+}
+
+.list:hover {
+  color: #0984e3;
+  cursor: pointer;
+
+}
+
+        </style>
 </head>
 
 <body>
@@ -139,15 +167,20 @@ if (isset($_GET['username'])) {
                         </a>
                 </div>
                 <div class="search">
-                        <input type="text" placeholder="Search" class="search-input">
-                        <button type="submit">Search</button>
+                        <form action="api/search-user" method='get' id="searchform">
+                                <input type="text" placeholder="Search" class="search-input sbox">
+                                <button id="user-search" type="submit">Search</button>
+                        </form>
+                        <div class="suggestions autocomplete">
+
+                        </div>
                 </div>
                 <div class="nav-links">
                         <ul class="links">
-                                <li><a href="#">Home</a></li>
-                                <li><a href="#">Chats</a></li>
-                                <li><a href="#">Notifications</a></li>
-                                <li><a href="#">My Profile</a></li>
+                        <li><a href="index.html">Home</a></li>
+                <li><a href="messages.html">Chats</a></li>
+                <li><a href="notification.html">Notifications</a></li>
+                <li><a  id="p" href="">My Profile</a></li>
                         </ul>
                 </div>
         </div>
@@ -160,7 +193,7 @@ if (isset($_GET['username'])) {
                                 </div>
                         </div>
                         <div class="edit">
-                                <button class="edit-btn">Edit Profile</button>
+                                <button class="edit-btn" onclick="window.location.href='profile-edit.html'">Edit Profile</button>
                         </div>
                 </div>
                 <div class="info">
@@ -241,33 +274,74 @@ if (isset($_GET['username'])) {
 
                 </div>
                 <div class="modal fade" role="dialog" tabindex="-1">
-                        <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                        <div class="modal-header">
-                                                <h4 class="modal-title">Comments</h4>
-                                        </div>
-                                        <div class="modal-body" style="max-height: 400px; overflow-y: auto">
-                                                <p>The content of your modal.</p>
-                                        </div>
-                                        <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button></div>
-                                </div>
+                <div class="modal-dialog" role="document" style="border:none;border-radius: 10px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" style="padding-top:10px;">Comments</h4>
                         </div>
+                        <div class="modal-content" style="height:300px;">
+                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                            <p>Hurry become first to comment....</p>
+                        </div>
+                        </div>
+                        <div class="modal-footer" style="top:10px;"> <textarea type="text" name="comment_content" id="comment_content"
+                                placeholder="comment" style="width: 73%; position: relative; top: -1px;"></textarea>
+                            <button class="postcomment" type="submit" \ name="submit">comment</button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-light" type="button"
+                                data-dismiss="modal"
+                                onclick="$('.modal-body').html('Hurry become first to comment....')">Close</button>
+                        </div>
+                    </div>
                 </div>
+            </div>
         </div>
         </div>
 
 </body>
 <script type="text/javascript">
-         function scrollToAnchor(aid){
-    try {
-    var aTag = $(aid);
-        $('html,body').animate({scrollTop: aTag.offset().top},'slow');
-        } catch (error) {
-                console.log(error)
-        }
-    }
-
+        $.ajax({
+            type: "GET",
+                url: "api/check-loggedin",
+                processData: false,
+                contentType: "application/json",
+                data: '',
+                success: function (r) {
+                    if(r == 'Not logged in'){
+                        window.location.href = 'signup-signin.html'
+                    }
+                }
+        })
         
+        function scrollToAnchor(aid) {
+                try {
+                        var aTag = $(aid);
+                        $('html,body').animate({
+                                scrollTop: aTag.offset().top
+                        }, 'slow');
+                } catch (error) {
+                        console.log(error)
+                }
+        }
+
+        $('.setting-btn').click(function() {
+                $('.modal').modal('show')
+                $('.modal-dialog').css({
+                        "width": "25%",
+                        "height": "36.5vh"
+                })
+                $('.modal-dialog').html('<div style="text-align:center;padding:3vh;"><a href="change-password.php" style="color:#2d3436;">Change Password</a></div>\
+                <hr>\
+                <div style="text-align:center;padding:3vh;"><a  href=# style="color:#2d3436;">Report a problem</a></div>\
+                <hr>\
+                <div style="text-align:center;padding:3vh;"><a  href="logout.php" style="color:#2d3436;">Logout</a></div>\
+                <hr>\
+                <div style="text-align:center;padding:3vh;"><p  style="color:#2d3436;cursor:pointer" onclick="modal_hide()">Cancel</p></div>\
+                ')
+        })
+        function modal_hide(){
+                $('.modal').modal('hide')
+        }
         $(document).ready(function() {
                 $.ajax({
                         type: 'GET',
@@ -345,12 +419,16 @@ if (isset($_GET['username'])) {
                 </div>'
                                         }
 
+                                        $('#p').attr("href", "profile.php?username="+ posts[index].PostedBy+"")
+
                                         $('.timeline').html(
                                                 $('.timeline').html() + timeline
                                         )
 
                                         $('[data-postid]').click(function() {
+                                                $('.modal').modal('show')
                                                 var buttonid = $(this).attr('data-postid');
+                                                $('.postcomment').attr("data-commentid", buttonid)
                                                 $.ajax({
                                                         type: "GET",
                                                         url: "api/comments?postid=" + $(this).attr('data-postid'),
@@ -360,7 +438,7 @@ if (isset($_GET['username'])) {
                                                         success: function(r) {
                                                                 var res = JSON.parse(r)
                                                                 showCommentsModal(res);
-
+                                                                console.log(r)
                                                         },
                                                         error: function(r) {
                                                                 console.log(r)
@@ -408,13 +486,92 @@ if (isset($_GET['username'])) {
                 $('.modal').modal('show')
                 var output = "";
                 for (var i = 0; i < res.length; i++) {
-                        output += res[i].Comment;
+                        output += "<p style='padding:4px;font-size:13.5px;'><b>"+res[i].CommentedBy+"</b>";
                         output += " ~ ";
-                        output += res[i].CommentedBy;
+                        output += res[i].Comment+"</p>";    
                         output += "<hr />";
                 }
                 $('.modal-body').html(output)
         }
+        $('.postcomment').click(function() {
+                if($('#comment_content').val() == "") {
+            alert("Comment Filed cannot be empty")
+            
+                }
+                var data = '{ "comment_data" : "' + $('#comment_content').val() + '"}'
+                console.log(data)
+                $.ajax({
+                        type: "POST",
+                        url: "api/postcomment?postid=" + $(this).attr('data-commentid'),
+                        processData: false,
+                        contentType: "application/json",
+                        data: data,
+                        success: function(res) {
+                                $('#comment_content').val("")
+                            
+                        }
+                })
+        })
+
+        //search 
+
+        $('.sbox').focus(function () {
+            $('.autocomplete').html("")
+            $('.suggestions').css("display", "block")
+        })
+        $('body').click(function () {
+            $('.autocomplete').html("")
+        })
+
+        $('.sbox').keyup(function () {
+            $('.autocomplete').html("")
+            $.ajax({
+                type: "GET",
+                url: "api/search?query=" + $(this).val(),
+                processData: false,
+                contentType: "application/json",
+                data: '',
+                success: function (r) {
+                    r = JSON.parse(r)
+                    for (var i = 0; i < r.length; i++) {
+                        $('.autocomplete').html(
+                            $('.autocomplete').html() +
+                            '<a style="color:black;" href="profile.php?username='+r[i].username +'#'+r[i].id+'"><p class="list">' + r[i].body + ' ~ <b>' + r[i].username + '</b></p></a>'
+                            
+                        )
+                    }
+                },
+                error: function (r) {
+                    console.log(r)
+                }
+            })
+        })
+
+        $('#searchform').submit(function(e){
+            e.preventDefault()
+            $('.autocomplete').html("")
+            $.ajax({
+                type: "GET",
+                url: "api/search-user?query=" + $('.sbox').val(),
+                processData: false,
+                contentType: "application/json",
+                data: '',
+                success: function (r) {
+                    r = JSON.parse(r)
+                    for (var i = 0; i < r.length; i++) {
+                        $('.autocomplete').html(
+                            $('.autocomplete').html() +
+                            '<a style="color:black;" href="profile.php?username='+r[i].username +'"><p class="list">' + r[i].username + '</b></p></a>'   
+                        )
+                    }
+                    
+                },
+                error: function (r) {
+                    console.log(r)
+                }
+            })
+        })
+
 </script>
 
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>

@@ -7,17 +7,52 @@
     <title>Friesta | Profile Edit</title>
     <script src="./scripts/jquery.min.js"></script>
     <link rel="stylesheet" href="pages/styles/profile-edit.css">
+    <style>
+                .suggestions {
+  width: 96.2%;
+  border: 1px solid lightslategray;
+  border-bottom: none;
+  position: relative;
+  z-index: 100;
+  opacity: 1;
+  background: white;
+  border-radius: 2px;
+  display:none;
+}
+
+
+.list {
+  padding: 10px;
+  font-size: 14px;
+  border-bottom: 1px solid lightslategray;
+
+}
+
+.list:hover {
+  color: #0984e3;
+  cursor: pointer;
+
+}
+
+.container{
+    border-radius: 10px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    border:none;
+}
+    </style>
 </head>
 <body>
 <div class="header">
         <div class="logo">
-            <a href="#">
+            <a href="index.html">
                 <h1 id="friesta">Friesta</h1>
             </a>
         </div>
         <div class="search">
+            <form action="api/search-user" method='get' id="searchform">
             <input type="text" placeholder="Search" class="search-input sbox">
-            <button type="submit">Search</button>
+            <button id="user-search" type="submit">Search</button>
+        </form>
             <div class="suggestions autocomplete">
 
             </div>
@@ -25,10 +60,10 @@
         </div>
         <div class="nav-links">
             <ul class="links">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Chats</a></li>
-                <li><a href="#">Notifications</a></li>
-                <li><a href="#">My Profile</a></li>
+               <li><a href="index.html">Home</a></li>
+                <li><a href="messages.html">Chats</a></li>
+                <li><a href="notification.html">Notifications</a></li>
+                <li><a  id="p" href="">My Profile</a></li>
             </ul>
         </div>
     </div>
@@ -36,7 +71,7 @@
 
     <div class="container">
         <div class="heading">
-            <h2><u>Edit Profile</u></h2>
+            <h2 style="color:#222f3e"><u>Edit Profile</u></h2>
         </div>
 
         <div class="user-section">
@@ -103,6 +138,18 @@
 </script>
 <script type="text/javascript">
 $(document).ready(function(){
+    $.ajax({
+            type: "GET",
+                url: "api/check-loggedin",
+                processData: false,
+                contentType: "application/json",
+                data: '',
+                success: function (r) {
+                    if(r == 'Not logged in'){
+                        window.location.href = 'signup-signin.html'
+                    }
+                }
+        })
 
     $('#c').click(function(e){
         e.preventDefault();
@@ -179,12 +226,71 @@ $.ajax({
         contentType: "application/json",
         data: "",
         success: function(res){
+            $('#p').attr("href", "profile.php?username="+res+"")
             $('#username').val(res) 
+
         },
         error: function(){
             console.log(res)
         }
     })
+    $('.sbox').focus(function () {
+            $('.autocomplete').html("")
+            $('.suggestions').css("display", "block")
+        })
+        $('body').click(function () {
+            $('.autocomplete').html("")
+        })
+
+        $('.sbox').keyup(function () {
+            $('.autocomplete').html("")
+            $.ajax({
+                type: "GET",
+                url: "api/search?query=" + $(this).val(),
+                processData: false,
+                contentType: "application/json",
+                data: '',
+                success: function (r) {
+                    r = JSON.parse(r)
+                    for (var i = 0; i < r.length; i++) {
+                        $('.autocomplete').html(
+                            $('.autocomplete').html() +
+                            '<a style="color:black;" href="profile.php?username='+r[i].username +'#'+r[i].id+'"><p class="list">' + r[i].body + ' ~ <b>' + r[i].username + '</b></p></a>'
+                            
+                        )
+                    }
+                },
+                error: function (r) {
+                    console.log(r)
+                }
+            })
+        })
+
+        $('#searchform').submit(function(e){
+            e.preventDefault()
+            $('.autocomplete').html("")
+            $.ajax({
+                type: "GET",
+                url: "api/search-user?query=" + $('.sbox').val(),
+                processData: false,
+                contentType: "application/json",
+                data: '',
+                success: function (r) {
+                    r = JSON.parse(r)
+                    for (var i = 0; i < r.length; i++) {
+                        $('.autocomplete').html(
+                            $('.autocomplete').html() +
+                            '<a style="color:black;" href="profile.php?username='+r[i].username +'"><p class="list">' + r[i].username + '</b></p></a>'   
+                        )
+                    }
+                    
+                },
+                error: function (r) {
+                    console.log(r)
+                }
+            })
+        })
+
 })
 
 </script>

@@ -37,11 +37,9 @@ if (isset($_GET['post'])) {
 
 
 <?php
-$followingposts = DB::query('SELECT posts.id, posts.body, posts.posted_at, posts.postimg, posts.likes, users.`username`, users.profileimg FROM users, posts, followers
-WHERE  (posts.user_id = followers.user_id
-OR posts.user_id = :userid)
-AND users.id = posts.user_id
-AND follower_id = :userid
+$followingposts = DB::query('SELECT posts.id, posts.body, posts.posted_at, posts.postimg, posts.likes,users.username,users.profileimg FROM posts LEFT JOIN followers on followers.user_id = posts.user_id
+LEFT JOIN users on users.id = posts.user_id
+WHERE follower_id=:userid OR posts.user_id=:userid
 ORDER BY posts.likes DESC ;', array(':userid' => $userid), array(':userid' => $userid));
 
 

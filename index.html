@@ -12,18 +12,25 @@
     <link rel="stylesheet" href="./pages/styles/modal.css">
     <script src="./scripts/jquery.min.js"></script>
     <link rel="stylesheet" href="./pages/styles/home.css">
+    <style>
+        .list{
+            padding:10px;
+        }
+    </style>
 </head>
 
 <body>
     <div class="header">
         <div class="logo">
-            <a href="#">
+            <a href="index.html">
                 <h1 id="friesta">Friesta</h1>
             </a>
         </div>
         <div class="search">
+        <form action="api/search-user" method='get' id="searchform">
             <input type="text" placeholder="Search" class="search-input sbox">
-            <button type="submit">Search</button>
+            <button id="user-search" type="submit">Search</button>
+        </form>
             <div class="suggestions autocomplete">
 
             </div>
@@ -31,15 +38,15 @@
         </div>
         <div class="nav-links">
             <ul class="links">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Chats</a></li>
-                <li><a href="#">Notifications</a></li>
-                <li><a href="#">My Profile</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="messages.html">Chats</a></li>
+                <li><a href="notification.html">Notifications</a></li>
+                <li><a  id="p" href="">My Profile</a></li>
             </ul>
         </div>
     </div>
     <div class="container">
-        <div class="detail">
+        <div class="detail" style="background:none">
 
         </div>
         <div class="posts">
@@ -65,16 +72,18 @@
 
             </div>
             <div class="modal fade" role="dialog" tabindex="-1">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog" role="document" style="border:none;border-radius: 10px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Comments</h4>
+                            <h4 class="modal-title" style="padding-top:10px;">Comments</h4>
                         </div>
-                        <div class="modal-body" style="max-height: 400px; overflow-y: auto">
+                        <div class="modal-content" style="height:300px;">
+                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
                             <p>Hurry become first to comment....</p>
                         </div>
-
-                        <div class="modal-footer"> <textarea type="text" name="comment_content" id="comment_content"
+                        </div>
+                        <div class="modal-footer" style="top:10px;"> <textarea type="text" name="comment_content" id="comment_content"
                                 placeholder="comment" style="width: 73%; position: relative; top: -1px;"></textarea>
                             <button class="postcomment" type="submit" \ name="submit">comment</button>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-light" type="button"
@@ -114,6 +123,19 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
+        $.ajax({
+            type: "GET",
+                url: "api/check-loggedin",
+                processData: false,
+                contentType: "application/json",
+                data: '',
+                success: function (r) {
+                    if(r == 'Not logged in'){
+                        window.location.href = 'signup-signin.html'
+                    }
+                }
+        })
+
         $('.sbox').focus(function () {
             $('.autocomplete').html("")
             $('.suggestions').css("display", "block")
@@ -146,8 +168,30 @@
             })
         })
 
-
-
+        $('#searchform').submit(function(e){
+            e.preventDefault()
+            $('.autocomplete').html("")
+            $.ajax({
+                type: "GET",
+                url: "api/search-user?query=" + $('.sbox').val(),
+                processData: false,
+                contentType: "application/json",
+                data: '',
+                success: function (r) {
+                    r = JSON.parse(r)
+                    for (var i = 0; i < r.length; i++) {
+                        $('.autocomplete').html(
+                            $('.autocomplete').html() +
+                            '<a style="color:black;" href="profile.php?username='+r[i].username +'"><p class="list">' + r[i].username + '</b></p></a>'   
+                        )
+                    }
+                    
+                },
+                error: function (r) {
+                    console.log(r)
+                }
+            })
+        })
 
         $.ajax({
             type: 'GET',
@@ -234,9 +278,11 @@
                         $('.timeline').html() + timeline
                     )
 
+                    $('#p').attr("href", "profile.php?username="+ posts[index].PostedBy+"")
 
                     $('[data-postid]').click(function () {
                         $('.modal').modal('show')
+                        $('#comment_content').val("")
                         var buttonid = $(this).attr('data-postid');
                         $('.postcomment').attr("data-commentid", buttonid)
                         $.ajax({
@@ -248,7 +294,8 @@
                             success: function (r) {
                                 var res = JSON.parse(r)
                                 showCommentsModal(res);
-                                console.log(r)
+                               
+                                
                             },
                             error: function (r) {
                                 console.log(r)
@@ -293,16 +340,20 @@
         $('.modal').modal('show')
         var output = "";
         for (var i = 0; i < res.length; i++) {
-            output += res[i].Comment;
+            output += "<p style='padding:4px;font-size:13.5px;'><b>"+res[i].CommentedBy+"</b>";
             output += " ~ ";
-            output += res[i].CommentedBy;
+            output += res[i].Comment+"</p>";    
             output += "<hr />";
         }
         $('.modal-body').html(output)
     }
-    $('.postcomment').click(function () {
+    $('.postcomment').click(function (e) {
+        if($('#comment_content').val() == "") {
+            alert("Comment Filed cannot be empty")
+            
+        }
         var data = '{ "comment_data" : "' + $('#comment_content').val() + '"}'
-        console.log(data)
+        e.preventDefault();
         $.ajax({
             type: "POST",
             url: "api/postcomment?postid=" + $(this).attr('data-commentid'),
@@ -310,6 +361,9 @@
             contentType: "application/json",
             data: data,
             success: function (res) {
+                $('#comment_content').val("")
+            },
+            error: function(){
                 console.log(res)
             }
         })
